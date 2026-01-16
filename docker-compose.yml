@@ -1,0 +1,64 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: django_demo_web
+    command: /app/scripts/entrypoint.sh
+    volumes:
+      - .:/app
+    ports:
+      - "8001:8000"
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=dev-secret-key-change-in-production
+      - MYSQL_DATABASE=django_demo_db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=dev123
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - REDIS_URL=redis://redis:6379/0
+      - CORS_ALLOWED_ORIGINS=http://localhost:8001
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.4
+    container_name: django_demo_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=dev123
+      - MYSQL_DATABASE=django_demo_db
+      - MYSQL_CHARSET=utf8mb4
+      - MYSQL_COLLATION=utf8mb4_unicode_ci
+    ports:
+      - "3301:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pdev123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: django_demo_redis
+    ports:
+      - "6381:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  redis_data:
