@@ -1,6 +1,6 @@
-# 零售業簡易ERP系統 - Django REST API 專案
+# 龜三的ERP Demo - Django REST API 專案
 
-![CI](https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/kamesan634/django-demo/actions/workflows/ci.yml/badge.svg)
 
 基於 Python 3.12 + Django 5.2 LTS + Django REST Framework 的零售業 ERP 系統 RESTful API。
 
