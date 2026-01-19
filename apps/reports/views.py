@@ -597,7 +597,7 @@ class ExportViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['get'])
     def sales_daily(self, request):
         """Export daily sales report."""
-        format_type = request.query_params.get('format', 'csv')
+        format_type = request.query_params.get('export_format', 'csv')
         date_str = request.query_params.get('date')
 
         if date_str:
@@ -645,7 +645,7 @@ class ExportViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['get'])
     def inventory_current(self, request):
         """Export current inventory report."""
-        format_type = request.query_params.get('format', 'csv')
+        format_type = request.query_params.get('export_format', 'csv')
         warehouse_id = request.query_params.get('warehouse_id')
 
         queryset = Inventory.objects.select_related(
@@ -689,7 +689,7 @@ class ExportViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['get'])
     def inventory_movements(self, request):
         """Export inventory movement report."""
-        format_type = request.query_params.get('format', 'csv')
+        format_type = request.query_params.get('export_format', 'csv')
         warehouse_id = request.query_params.get('warehouse_id')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
@@ -743,7 +743,7 @@ class ExportViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['get'])
     def top_products(self, request):
         """Export top selling products report."""
-        format_type = request.query_params.get('format', 'csv')
+        format_type = request.query_params.get('export_format', 'csv')
         days = int(request.query_params.get('days', 30))
         start_date = timezone.now().date() - timedelta(days=days)
 
@@ -779,7 +779,7 @@ class ExportViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['get'])
     def customers(self, request):
         """Export customer report."""
-        format_type = request.query_params.get('format', 'csv')
+        format_type = request.query_params.get('export_format', 'csv')
 
         data = list(Customer.objects.filter(
             is_active=True
@@ -1309,7 +1309,7 @@ class CustomReportViewSet(StandardResponseMixin, BaseViewSet):
     def export(self, request, pk=None):
         """Export custom report."""
         report = self.get_object()
-        format_type = request.query_params.get('format', 'excel')
+        format_type = request.query_params.get('export_format', 'excel')
 
         try:
             data = self._execute_report(report)

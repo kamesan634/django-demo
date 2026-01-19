@@ -878,7 +878,7 @@ class TestCustomReportViews:
             created_by=admin_user
         )
 
-        response = admin_client.get(f'/api/v1/custom-reports/{report.id}/export/?format=excel')
+        response = admin_client.get(f'/api/v1/custom-reports/{report.id}/export/?export_format=excel')
 
         assert response.status_code == status.HTTP_200_OK
 
@@ -892,7 +892,7 @@ class TestCustomReportViews:
             created_by=admin_user
         )
 
-        response = admin_client.get(f'/api/v1/custom-reports/{report.id}/export/?format=csv')
+        response = admin_client.get(f'/api/v1/custom-reports/{report.id}/export/?export_format=csv')
 
         assert response.status_code == status.HTTP_200_OK
 
@@ -1165,7 +1165,7 @@ class TestExportViews:
             created_by=admin_user
         )
 
-        response = admin_client.get('/api/v1/export/sales_daily/?format=excel')
+        response = admin_client.get('/api/v1/export/sales_daily/?export_format=excel')
 
         assert response.status_code == status.HTTP_200_OK
 
@@ -1183,7 +1183,7 @@ class TestExportViews:
             created_by=admin_user
         )
 
-        response = admin_client.get('/api/v1/export/sales_daily/?format=pdf')
+        response = admin_client.get('/api/v1/export/sales_daily/?export_format=pdf')
 
         # May succeed or fail depending on PDF library
         assert response.status_code in [status.HTTP_200_OK, status.HTTP_500_INTERNAL_SERVER_ERROR]
@@ -1199,7 +1199,7 @@ class TestExportViews:
             quantity=100
         )
 
-        response = admin_client.get('/api/v1/export/inventory_current/?format=excel')
+        response = admin_client.get('/api/v1/export/inventory_current/?export_format=excel')
 
         assert response.status_code == status.HTTP_200_OK
 
@@ -1242,19 +1242,19 @@ class TestExportViews:
 
     def test_export_inventory_movements_excel(self, admin_client):
         """Test exporting inventory movements as Excel."""
-        response = admin_client.get('/api/v1/export/inventory_movements/?format=excel')
+        response = admin_client.get('/api/v1/export/inventory_movements/?export_format=excel')
         assert response.status_code == status.HTTP_200_OK
 
     def test_export_top_products_excel(self, admin_client):
         """Test exporting top products as Excel."""
-        response = admin_client.get('/api/v1/export/top_products/?format=excel&days=60')
+        response = admin_client.get('/api/v1/export/top_products/?export_format=excel&days=60')
         assert response.status_code == status.HTTP_200_OK
 
     def test_export_customers_excel(self, admin_client, create_customer):
         """Test exporting customers as Excel."""
         create_customer(name='Export Excel Customer')
 
-        response = admin_client.get('/api/v1/export/customers/?format=excel')
+        response = admin_client.get('/api/v1/export/customers/?export_format=excel')
 
         assert response.status_code == status.HTTP_200_OK
 
