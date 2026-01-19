@@ -789,7 +789,7 @@ class ExportViewSet(viewsets.ViewSet):
             'phone',
             'email',
             'level__name',
-            'total_points',
+            'points',
             'total_spending',
             'total_orders',
             'created_at'
@@ -801,7 +801,7 @@ class ExportViewSet(viewsets.ViewSet):
             ('phone', '電話'),
             ('email', 'Email'),
             ('level__name', '會員等級'),
-            ('total_points', '點數餘額'),
+            ('points', '點數餘額'),
             ('total_spending', '累計消費'),
             ('total_orders', '訂單數'),
             ('created_at', '加入時間'),
@@ -1013,7 +1013,7 @@ class CustomerReportViewSet(StandardResponseMixin, viewsets.ViewSet):
         top_customers = Customer.objects.filter(
             is_active=True
         ).order_by('-total_spending')[:10].values(
-            'id', 'name', 'member_no', 'total_spending', 'total_orders', 'total_points'
+            'id', 'name', 'member_no', 'total_spending', 'total_orders', 'points'
         )
 
         return self.success_response(data={
@@ -1395,7 +1395,7 @@ class CustomReportViewSet(StandardResponseMixin, BaseViewSet):
 
         return list(qs.values(
             'member_no', 'name', 'phone', 'level__name',
-            'total_points', 'total_spending', 'total_orders'
+            'points', 'total_spending', 'total_orders'
         )[:1000])
 
     def _execute_product_report(self, filters, columns, report):
