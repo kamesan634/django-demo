@@ -784,7 +784,7 @@ class ExportViewSet(viewsets.ViewSet):
         data = list(Customer.objects.filter(
             is_active=True
         ).select_related('level').values(
-            'member_number',
+            'member_no',
             'name',
             'phone',
             'email',
@@ -796,7 +796,7 @@ class ExportViewSet(viewsets.ViewSet):
         ).order_by('-total_spending')[:1000])
 
         columns = [
-            ('member_number', '會員編號'),
+            ('member_no', '會員編號'),
             ('name', '姓名'),
             ('phone', '電話'),
             ('email', 'Email'),
@@ -1013,7 +1013,7 @@ class CustomerReportViewSet(StandardResponseMixin, viewsets.ViewSet):
         top_customers = Customer.objects.filter(
             is_active=True
         ).order_by('-total_spending')[:10].values(
-            'id', 'name', 'member_number', 'total_spending', 'total_orders', 'total_points'
+            'id', 'name', 'member_no', 'total_spending', 'total_orders', 'total_points'
         )
 
         return self.success_response(data={
@@ -1035,9 +1035,9 @@ class CustomerReportViewSet(StandardResponseMixin, viewsets.ViewSet):
             'level__id', 'level__name'
         ).annotate(
             customer_count=Count('id'),
-            total_spending=Sum('total_spending'),
+            sum_spending=Sum('total_spending'),
             avg_spending=Avg('total_spending')
-        ).order_by('-total_spending')
+        ).order_by('-sum_spending')
 
         return self.success_response(data=list(data))
 
@@ -1394,7 +1394,7 @@ class CustomReportViewSet(StandardResponseMixin, BaseViewSet):
             qs = qs.filter(total_spending__gte=filters['min_spending'])
 
         return list(qs.values(
-            'member_number', 'name', 'phone', 'level__name',
+            'member_no', 'name', 'phone', 'level__name',
             'total_points', 'total_spending', 'total_orders'
         )[:1000])
 
@@ -1406,7 +1406,7 @@ class CustomReportViewSet(StandardResponseMixin, BaseViewSet):
             qs = qs.filter(category_id=filters['category_id'])
 
         return list(qs.values(
-            'sku', 'name', 'category__name', 'selling_price', 'cost_price'
+            'sku', 'name', 'category__name', 'sale_price', 'cost_price'
         )[:1000])
 
     def _execute_purchase_report(self, filters, columns, report):
